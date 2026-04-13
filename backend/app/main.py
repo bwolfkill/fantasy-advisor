@@ -1,7 +1,7 @@
+from api.router import api_v1_router
 from core.config import settings
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from api.router import api_v1_router
 
 
 def create_app() -> FastAPI:
@@ -27,5 +27,6 @@ def create_app() -> FastAPI:
         return {"status": "healthy"}
 
     return app
+
 
 app = create_app()
