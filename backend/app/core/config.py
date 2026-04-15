@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     )
 
     # Database
-    DATABASE_URL: str
+    DATABASE_URL: str = "UNSET_CONFIGURE_DATABASE_URL"
 
     # CORS
     CORS_ORIGINS: list[str] = ["http://localhost:5173"]
