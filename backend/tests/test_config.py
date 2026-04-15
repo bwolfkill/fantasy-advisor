@@ -6,4 +6,3 @@ def test_settings():
 
     assert settings.ENVIRONMENT == "dev"
     assert settings.LOG_LEVEL == "INFO"
-    assert True == False
