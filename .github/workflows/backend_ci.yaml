@@ -1,0 +1,43 @@
+name: backend-ci
+run-name: ${{ github.actor }} - ${{ github.event_name }}
+on:
+  push:
+    paths:
+      - "backend/**"
+    branches:
+      - main
+  pull_request:
+    paths:
+      - "backend/**"
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: pytest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version-file: "backend/.python-version"
+          cache: true
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+      - name: Install the project
+        working-directory: backend
+        run: uv sync --locked --all-extras --dev
+
+      - name: Run tests
+        working-directory: backend
+        run: uv run pytest tests
+
+      - name: Minimize uv cache
+        working-directory: backend
+        run: uv cache prune --ci
