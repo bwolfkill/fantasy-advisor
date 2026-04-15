@@ -31,7 +31,7 @@ def create_app() -> FastAPI:
     )
     async def health(db: Annotated[AsyncSession, Depends(get_db)]):
         try:
-            db.execute("SELECT 1")
+            await db.execute("SELECT 1")
             db_status = "healthy"
         except Exception:
             db_status = "unhealthy"

@@ -311,6 +311,7 @@ dependencies = [
     { name = "pydantic" },
     { name = "pydantic-settings" },
     { name = "pyjwt", extra = ["crypto"] },
+    { name = "python-dotenv" },
     { name = "sqlalchemy" },
 ]
 
@@ -332,6 +333,7 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.12.5" },
     { name = "pydantic-settings", specifier = ">=2.13.1" },
     { name = "pyjwt", extras = ["crypto"], specifier = ">=2.12.1" },
+    { name = "python-dotenv", specifier = ">=1.2.2" },
     { name = "sqlalchemy", specifier = ">=2.0.49" },
 ]
 

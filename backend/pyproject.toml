@@ -12,6 +12,7 @@ dependencies = [
     "pydantic>=2.12.5",
     "pydantic-settings>=2.13.1",
     "pyjwt[crypto]>=2.12.1",
+    "python-dotenv>=1.2.2",
     "sqlalchemy>=2.0.49",
 ]
 
