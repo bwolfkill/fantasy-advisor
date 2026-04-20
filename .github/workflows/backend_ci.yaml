@@ -50,7 +50,7 @@ jobs:
         working-directory: backend
         env:
           DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/fantasy_advisor
-        run: alembic upgrade head
+        run: uv run alembic upgrade head
       - name: Run tests
         working-directory: backend
         env:

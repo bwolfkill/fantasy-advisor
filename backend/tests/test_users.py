@@ -16,6 +16,7 @@ async def test_create_user(db_session: AsyncSession):
     result = await db_session.execute(select(User).where(User.email == "test@example.com"))
     fetched = result.scalar_one()
 
+    assert fetched.id == user.id
     assert fetched.email == "test@example.com"
     assert fetched.username == "testuser"
     assert fetched.is_active is True
