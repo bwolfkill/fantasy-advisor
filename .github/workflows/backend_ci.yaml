@@ -46,7 +46,11 @@ jobs:
       - name: Install the project
         working-directory: backend
         run: uv sync --locked --all-extras --dev
-
+      - name: Run database migrations
+        working-directory: backend
+        env:
+          DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/fantasy_advisor
+        run: alembic upgrade head
       - name: Run tests
         working-directory: backend
         env:
