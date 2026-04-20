@@ -1,15 +1,18 @@
 import pytest
 from httpx import ASGITransport, AsyncClient
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.pool import NullPool
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
-from app.db.engine import engine
+from app.core.config import settings
 from app.db.session import get_db
 from app.main import app
+
+test_engine = create_async_engine(settings.DATABASE_URL, poolclass=NullPool)
 
 
 @pytest.fixture()
 async def db_session():
-    async with engine.connect() as conn:
+    async with test_engine.connect() as conn:
         await conn.begin()
         async with AsyncSession(
             bind=conn,
@@ -27,9 +30,7 @@ async def client(db_session: AsyncSession):
 
     app.dependency_overrides[get_db] = override_get_db
 
-    async with AsyncClient(
-        transport=ASGITransport(app=app), base_url="http://test"
-    ) as ac:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
         yield ac
 
     app.dependency_overrides.clear()
