@@ -1,11 +1,13 @@
 from typing import Annotated
 
-from api.router import api_v1_router
-from core.config import settings
-from db.session import get_db
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.api.router import api_v1_router
+from app.core.config import settings
+from app.db.session import get_db
 
 
 def create_app() -> FastAPI:
@@ -31,7 +33,7 @@ def create_app() -> FastAPI:
     )
     async def health(db: Annotated[AsyncSession, Depends(get_db)]):
         try:
-            await db.execute("SELECT 1")
+            await db.execute(text("SELECT 1"))
             db_status = "healthy"
         except Exception:
             db_status = "unhealthy"
