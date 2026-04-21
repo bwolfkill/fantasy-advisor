@@ -18,7 +18,6 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "pre-commit>=4.0.0",
     "pytest>=9.0.3",
     "pytest-asyncio>=1.3.0",
     "pytest-cov>=7.1.0",
@@ -27,10 +26,11 @@ dev = [
 
 [tool.ruff]
 line-length = 120
-target-version = "py312"
+target-version = "py314"
 
 [tool.ruff.lint]
 select = ["I", "E", "W", "F", "UP", "B"]
+ignore = ["UP037"]  # Keep quoted forward refs in Mapped[] to avoid circular imports
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
