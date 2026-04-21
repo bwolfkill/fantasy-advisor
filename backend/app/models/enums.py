@@ -36,6 +36,3 @@ class PlayerStatus(StrEnum):
 class ValueSource(StrEnum):
     FANTASYCALC = "fantasycalc"
     CUSTOM = "custom"
-
-
-print("test")
