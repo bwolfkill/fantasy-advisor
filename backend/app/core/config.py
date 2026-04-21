@@ -12,7 +12,7 @@ class Settings(BaseSettings):
 
     # Auth
     SECRET_KEY: str = "change-me-in-production"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
+    ACCESS_TOKEN_EXPIRE_SECONDS: int = 3600
 
     # External APIs
     SLEEPER_API_BASE_URL: str = "https://api.sleeper.app/v1"
