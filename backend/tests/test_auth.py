@@ -2,6 +2,8 @@ import pytest
 from fastapi import status
 from httpx import AsyncClient
 
+from app.core.security import decode_access_token
+
 
 @pytest.fixture
 def valid_user_payload() -> dict:
@@ -12,7 +14,7 @@ def valid_user_payload() -> dict:
 async def registered_user(client: AsyncClient, valid_user_payload: dict) -> dict:
     response = await client.post("/api/v1/auth/register", json=valid_user_payload)
     assert response.status_code == status.HTTP_201_CREATED
-    return valid_user_payload
+    return response.json()
 
 
 async def test_register_success(client: AsyncClient, valid_user_payload: dict):
@@ -60,4 +62,33 @@ async def test_register_duplicate_conflicts(
     client: AsyncClient, registered_user: dict, payload: dict, expected_status: int
 ):
     response = await client.post("/api/v1/auth/register", json=payload)
+    assert response.status_code == expected_status
+
+
+async def test_login_success(client: AsyncClient, registered_user: dict, valid_user_payload: dict):
+    response = await client.post("/api/v1/auth/login", json=valid_user_payload)
+    assert response.status_code == status.HTTP_200_OK
+    assert decode_access_token(response.json()["access_token"])["sub"] == registered_user["id"]
+    assert response.json()["token_type"] == "bearer"
+
+
+@pytest.mark.parametrize(
+    "payload,expected_status",
+    [
+        pytest.param(
+            {"email": "john1@doe.com", "username": "johndoe1", "password": "password"},
+            status.HTTP_401_UNAUTHORIZED,
+            id="wrong email",
+        ),
+        pytest.param(
+            {"email": "john@doe.com", "username": "johndoe1", "password": "wrong_password"},
+            status.HTTP_401_UNAUTHORIZED,
+            id="wrong password",
+        ),
+    ],
+)
+async def test_login_invalid_credentials(
+    client: AsyncClient, registered_user: dict, payload: dict, expected_status: int
+):
+    response = await client.post("/api/v1/auth/login", json=payload)
     assert response.status_code == expected_status
