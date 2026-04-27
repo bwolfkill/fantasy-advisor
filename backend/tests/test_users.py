@@ -1,3 +1,5 @@
+from fastapi import status
+from httpx import AsyncClient
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -20,3 +22,14 @@ async def test_create_user(db_session: AsyncSession):
     assert fetched.email == "test@example.com"
     assert fetched.username == "testuser"
     assert fetched.is_active is True
+
+
+async def test_get_me_authenticated(authenticated_client: AsyncClient, registered_user: dict):
+    response = await authenticated_client.get("/api/v1/users/me")
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json()["id"] == registered_user["id"]
+
+
+async def test_get_me_unauthenticated(client: AsyncClient):
+    response = await client.get("/api/v1/users/me")
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED

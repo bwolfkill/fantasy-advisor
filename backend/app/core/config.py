@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     FANTASYCALC_API_BASE_URL: str = "https://api.fantasycalc.com"
 
     # App
-    ENVIRONMENT: str = "dev"
+    ENVIRONMENT: str = "development"
     LOG_LEVEL: str = "INFO"
 
 

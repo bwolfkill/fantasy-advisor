@@ -1,20 +1,12 @@
 import pytest
 from fastapi import status
 from httpx import AsyncClient
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.security import decode_access_token
-
-
-@pytest.fixture
-def valid_user_payload() -> dict:
-    return {"email": "john@doe.com", "username": "johndoe1", "password": "password"}
-
-
-@pytest.fixture
-async def registered_user(client: AsyncClient, valid_user_payload: dict) -> dict:
-    response = await client.post("/api/v1/auth/register", json=valid_user_payload)
-    assert response.status_code == status.HTTP_201_CREATED
-    return response.json()
+from app.models.user import User
+from tests.conftest import create_expired_token
 
 
 async def test_register_success(client: AsyncClient, valid_user_payload: dict):
@@ -92,3 +84,40 @@ async def test_login_invalid_credentials(
 ):
     response = await client.post("/api/v1/auth/login", json=payload)
     assert response.status_code == expected_status
+
+
+@pytest.mark.parametrize(
+    "auth_header",
+    [
+        pytest.param(None, id="no auth header"),
+        pytest.param(f"Bearer {create_expired_token()}", id="expired token"),
+        pytest.param("Bearer notavalidtoken", id="malformed token"),
+    ],
+)
+async def test_protected_unauthorized(client: AsyncClient, auth_header: str | None):
+    if auth_header:
+        client.headers["Authorization"] = auth_header
+    response = await client.get("/api/v1/users/me")
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+async def test_protected_valid_token(authenticated_client: AsyncClient, registered_user: dict):
+    response = await authenticated_client.get("/api/v1/users/me")
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json()["id"] == registered_user["id"]
+    assert response.json()["email"] == registered_user["email"]
+
+
+async def test_protected_inactive_user(
+    client: AsyncClient, registered_user: dict, valid_user_payload: dict, db_session: AsyncSession
+):
+    login_response = await client.post("/api/v1/auth/login", json=valid_user_payload)
+    token = login_response.json()["access_token"]
+
+    user = await db_session.scalar(select(User).where(User.email == registered_user["email"]))
+    user.is_active = False
+    await db_session.flush()
+
+    client.headers["Authorization"] = f"Bearer {token}"
+    response = await client.get("/api/v1/users/me")
+    assert response.status_code == status.HTTP_400_BAD_REQUEST

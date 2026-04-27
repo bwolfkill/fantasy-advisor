@@ -24,5 +24,5 @@ def create_access_token(subject: str, expires_delta: timedelta | None = None) ->
     return encode(payload, settings.SECRET_KEY, algorithm="HS256")
 
 
-def decode_access_token(token: str) -> str:
+def decode_access_token(token: str) -> dict:
     return decode(token, settings.SECRET_KEY, algorithms=["HS256"])

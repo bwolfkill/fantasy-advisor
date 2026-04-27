@@ -18,7 +18,7 @@ from app.services.user_service import create_user
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
-@router.post("/register", status_code=status.HTTP_201_CREATED)
+@router.post("/register", status_code=status.HTTP_201_CREATED, response_model=UserResponse)
 async def register(db: Annotated[AsyncSession, Depends(get_db)], user_request: UserCreate) -> UserResponse:
     try:
         user: UserResponse = await create_user(db, user_request)
@@ -34,7 +34,7 @@ async def register(db: Annotated[AsyncSession, Depends(get_db)], user_request: U
     return user
 
 
-@router.post("/login", status_code=status.HTTP_200_OK)
+@router.post("/login", status_code=status.HTTP_200_OK, response_model=TokenResponse)
 async def login(db: Annotated[AsyncSession, Depends(get_db)], login_request: LoginRequest) -> TokenResponse:
     try:
         token: TokenResponse = await authenticate_user(db, login_request)
