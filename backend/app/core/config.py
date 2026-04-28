@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     database_url: str
 
     # CORS
-    cors_origins: list[str] = ["http://localhost:5173"]
+    cors_origins: list[str]
 
     # Auth
     secret_key: str

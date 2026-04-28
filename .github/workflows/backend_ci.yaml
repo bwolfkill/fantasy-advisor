@@ -17,12 +17,20 @@ permissions:
 
 jobs:
   test:
-    environment: development
     name: pytest
+    environment: development
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      ACCESS_TOKEN_EXPIRE_SECONDS: ${{ secrets.ACCESS_TOKEN_EXPIRE_SECONDS }}
+      CORS_ORIGINS: ${{ vars.CORS_ORIGINS }}
     runs-on: ubuntu-latest
     services:
       postgres:
         image: postgres:17-alpine
+        env:
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: fantasy_advisor
         ports:
           - 5432:5432
         options: >-
