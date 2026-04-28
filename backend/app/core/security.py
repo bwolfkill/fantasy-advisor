@@ -18,11 +18,11 @@ def verify_password(plain: str, hashed: str) -> bool:
 
 def create_access_token(subject: str, expires_delta: timedelta | None = None) -> str:
     expire = datetime.now(UTC) + (
-        expires_delta if expires_delta else timedelta(seconds=settings.ACCESS_TOKEN_EXPIRE_SECONDS)
+        expires_delta if expires_delta else timedelta(seconds=settings.access_token_expire_seconds)
     )
     payload = {"sub": subject, "exp": expire}
-    return encode(payload, settings.SECRET_KEY, algorithm="HS256")
+    return encode(payload, settings.secret_key, algorithm="HS256")
 
 
 def decode_access_token(token: str) -> dict:
-    return decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+    return decode(token, settings.secret_key, algorithms=["HS256"])

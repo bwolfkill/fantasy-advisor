@@ -11,7 +11,7 @@ from app.core.security import create_access_token
 from app.db.session import get_db
 from app.main import app
 
-test_engine = create_async_engine(settings.DATABASE_URL, poolclass=NullPool)
+test_engine = create_async_engine(settings.database_url, poolclass=NullPool)
 
 
 def create_expired_token(subject: str = "fake-user-id") -> str:

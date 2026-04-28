@@ -14,9 +14,6 @@ services:
       - "8000:8000"
     depends_on:
       - db
-    environment:
-      DATABASE_URL: postgresql+asyncpg://postgres:postgres@db:5432/fantasy_advisor
-      CORS_ORIGINS: '["http://localhost:5173"]'
     
     develop:                                                                                                                                                                                                                                                                              
       watch:        
