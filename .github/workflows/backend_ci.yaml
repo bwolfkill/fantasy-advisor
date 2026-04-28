@@ -16,16 +16,13 @@ permissions:
   contents: read
 
 jobs:
+  environment: development
   test:
     name: pytest
     runs-on: ubuntu-latest
     services:
       postgres:
         image: postgres:17-alpine
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: fantasy_advisor
         ports:
           - 5432:5432
         options: >-
@@ -48,13 +45,9 @@ jobs:
         run: uv sync --locked --all-extras --dev
       - name: Run database migrations
         working-directory: backend
-        env:
-          DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/fantasy_advisor
         run: uv run alembic upgrade head
       - name: Run tests
         working-directory: backend
-        env:
-          DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/fantasy_advisor
         run: uv run pytest tests
 
       - name: Minimize uv cache
