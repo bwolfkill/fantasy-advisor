@@ -1,3 +1,5 @@
+import time
+
 import httpx
 import pytest
 import respx
@@ -99,3 +101,23 @@ async def test_sleeper_client_retry():
             await sleeper.get_sleeper_user("12345678")
 
         assert respx.calls.call_count == 3
+
+
+async def test_sleeper_player_cache_invalidation(load_test_data):
+    with respx.mock:
+        respx.get(f"{base_url}/players/nfl").mock(
+            return_value=httpx.Response(200, json=load_test_data("sleeper_players.json"))
+        )
+        for _ in range(2):
+            players = await sleeper.get_sleeper_players()
+
+        assert respx.calls.call_count == 1
+        assert players["3086"].first_name == "Tom"
+
+        sleeper._players_cache_time = time.time() - (60 * 60 * 25)
+
+        for _ in range(2):
+            players = await sleeper.get_sleeper_players()
+
+        assert respx.calls.call_count == 2
+        assert players["3086"].first_name == "Tom"

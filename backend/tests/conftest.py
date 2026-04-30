@@ -7,6 +7,7 @@ from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.pool import NullPool
 
+from app.clients import sleeper
 from app.core.config import settings
 from app.core.security import create_access_token
 from app.db.session import get_db
@@ -79,5 +80,5 @@ def load_test_data():
 
 @pytest.fixture(autouse=True)
 def reset_players_cache():
-    _players_cache = {}
-    _players_cache_time = 0.0
+    sleeper._players_cache = {}
+    sleeper._players_cache_time = 0.0
