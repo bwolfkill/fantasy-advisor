@@ -28,9 +28,8 @@ class Position(StrEnum):
 
 
 class PlayerStatus(StrEnum):
-    ACTIVE = "active"
-    INACTIVE = "inactive"
-    INJURED_RESERVE = "ir"
+    ACTIVE = "Active"
+    INACTIVE = "Inactive"
 
 
 class ValueSource(StrEnum):
