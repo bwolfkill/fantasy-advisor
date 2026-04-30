@@ -1,3 +1,4 @@
+import json
 from datetime import timedelta
 
 import pytest
@@ -18,7 +19,7 @@ def create_expired_token(subject: str = "fake-user-id") -> str:
     return create_access_token(subject, expires_delta=timedelta(seconds=-1))
 
 
-@pytest.fixture()
+@pytest.fixture
 async def db_session():
     async with test_engine.connect() as conn:
         await conn.begin()
@@ -31,7 +32,7 @@ async def db_session():
         await conn.rollback()
 
 
-@pytest.fixture()
+@pytest.fixture
 async def client(db_session: AsyncSession):
     async def override_get_db():
         yield db_session
@@ -65,3 +66,18 @@ async def authenticated_client(
     token = response.json()["access_token"]
     client.headers["Authorization"] = f"Bearer {token}"
     return client
+
+
+@pytest.fixture
+def load_test_data():
+    def _load(filename: str) -> dict:
+        with open(f"tests/data/{filename}") as f:
+            return json.load(f)
+
+    return _load
+
+
+@pytest.fixture(autouse=True)
+def reset_players_cache():
+    _players_cache = {}
+    _players_cache_time = 0.0

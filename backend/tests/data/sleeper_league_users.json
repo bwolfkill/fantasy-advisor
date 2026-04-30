@@ -1,0 +1,12 @@
+[
+  {
+    "user_id": "sleeper_user",
+    "username": "sleeperuser",
+    "display_name": "SleeperUser",
+    "avatar": "1233456789",
+    "metadata": {
+      "team_name": "Dezpacito"
+    },
+    "is_owner": true
+  }
+]
