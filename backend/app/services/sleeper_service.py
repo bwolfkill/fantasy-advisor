@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.clients.sleeper import get_sleeper_players
 from app.models.enums import Position
 from app.models.player import Player
+from app.models.user import User
 from app.schemas.sleeper import SleeperPlayer
 
 
@@ -38,4 +39,9 @@ async def sync_players_from_sleeper(db: AsyncSession):
     )
 
     await db.execute(upsert_stmt)
+    await db.commit()
+
+
+async def set_sleeper_user_id(db: AsyncSession, user: User, sleeper_user_id: str | None = None):
+    user.sleeper_user_id = sleeper_user_id
     await db.commit()

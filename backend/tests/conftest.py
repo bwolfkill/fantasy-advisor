@@ -20,6 +20,11 @@ def create_expired_token(subject: str = "fake-user-id") -> str:
     return create_access_token(subject, expires_delta=timedelta(seconds=-1))
 
 
+def load_test_data(filename: str) -> dict:
+    with open(f"tests/data/{filename}") as f:
+        return json.load(f)
+
+
 @pytest.fixture
 async def db_session():
     async with test_engine.connect() as conn:
@@ -59,23 +64,12 @@ async def registered_user(client: AsyncClient, valid_user_payload: dict) -> dict
 
 
 @pytest.fixture
-async def authenticated_client(
-    client: AsyncClient, registered_user: dict, valid_user_payload: valid_user_payload
-) -> AsyncClient:
+async def authenticated_client(client: AsyncClient, registered_user: dict, valid_user_payload: dict) -> AsyncClient:
     response = await client.post("/api/v1/auth/login", json=valid_user_payload)
     assert response.status_code == status.HTTP_200_OK
     token = response.json()["access_token"]
     client.headers["Authorization"] = f"Bearer {token}"
     return client
-
-
-@pytest.fixture
-def load_test_data():
-    def _load(filename: str) -> dict:
-        with open(f"tests/data/{filename}") as f:
-            return json.load(f)
-
-    return _load
 
 
 @pytest.fixture(autouse=True)

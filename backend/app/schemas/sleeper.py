@@ -12,7 +12,6 @@ class SleeperUser(SleeperBase):
     username: str
     display_name: str
     avatar: str | None = Field(default=None)
-    team_name: str | None = Field(default=None)
 
 
 class SleeperLeague(SleeperBase):
@@ -30,7 +29,7 @@ class SleeperLeague(SleeperBase):
 class SleeperLeagueUser(SleeperBase):
     user_id: str
     display_name: str
-    team_name: str | None = None
+    team_name: str | None = Field(default=None)
 
 
 class SleeperRoster(SleeperBase):
@@ -51,3 +50,7 @@ class SleeperPlayer(SleeperBase):
     years_exp: int | None = Field(default=None)
     status: str | None = Field(default=None)
     active: bool | None = Field(default=None)
+
+
+class SleeperLinkAccountRequest(SleeperBase):
+    sleeper_username: str

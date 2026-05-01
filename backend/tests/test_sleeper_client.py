@@ -7,11 +7,12 @@ import respx
 from app.clients import sleeper
 from app.core.config import settings
 from app.core.exceptions import SleeperAPIError, SleeperUserNotFoundError
+from tests.conftest import load_test_data
 
 base_url = settings.sleeper_api_base_url
 
 
-async def test_get_sleeper_user_by_id(load_test_data):
+async def test_get_sleeper_user_by_id():
     with respx.mock:
         respx.get(f"{base_url}/user/12345678").mock(
             return_value=httpx.Response(200, json=load_test_data("sleeper_user.json"))
@@ -20,7 +21,7 @@ async def test_get_sleeper_user_by_id(load_test_data):
         assert user.username == "sleeperuser"
 
 
-async def test_get_sleeper_user_by_username(load_test_data):
+async def test_get_sleeper_user_by_username():
     with respx.mock:
         respx.get(f"{base_url}/user/sleeperuser").mock(
             return_value=httpx.Response(200, json=load_test_data("sleeper_user.json"))
@@ -36,7 +37,7 @@ async def test_get_sleeper_user_not_found():
             await sleeper.get_sleeper_user_by_username("invaliduser")
 
 
-async def test_get_sleeper_user_leagues(load_test_data):
+async def test_get_sleeper_user_leagues():
     with respx.mock:
         respx.get(f"{base_url}/user/sleeperuser/leagues/nfl/2018").mock(
             return_value=httpx.Response(200, json=load_test_data("sleeper_leagues.json"))
@@ -53,7 +54,7 @@ async def test_get_sleeper_user_leagues_user_not_found():
         assert len(leagues) == 0
 
 
-async def test_get_sleeper_league(load_test_data):
+async def test_get_sleeper_league():
     with respx.mock:
         respx.get(f"{base_url}/league/league_id").mock(
             return_value=httpx.Response(200, json=load_test_data("sleeper_league.json"))
@@ -62,7 +63,7 @@ async def test_get_sleeper_league(load_test_data):
         assert league.name == "Sleeperbot Friends League"
 
 
-async def test_get_sleeper_league_rosters(load_test_data):
+async def test_get_sleeper_league_rosters():
     with respx.mock:
         respx.get(f"{base_url}/league/league_id/rosters").mock(
             return_value=httpx.Response(200, json=load_test_data("sleeper_rosters.json"))
@@ -71,7 +72,7 @@ async def test_get_sleeper_league_rosters(load_test_data):
         assert rosters[0].roster_id == 1
 
 
-async def test_get_sleeper_league_users(load_test_data):
+async def test_get_sleeper_league_users():
     with respx.mock:
         respx.get(f"{base_url}/league/league_id/users").mock(
             return_value=httpx.Response(200, json=load_test_data("sleeper_league_users.json"))
@@ -81,7 +82,7 @@ async def test_get_sleeper_league_users(load_test_data):
         assert users[0].team_name == "Dezpacito"
 
 
-async def test_get_sleeper_players(load_test_data):
+async def test_get_sleeper_players():
     with respx.mock:
         respx.get(f"{base_url}/players/nfl").mock(
             return_value=httpx.Response(200, json=load_test_data("sleeper_players.json"))
@@ -103,7 +104,7 @@ async def test_sleeper_client_retry():
         assert respx.calls.call_count == 3
 
 
-async def test_sleeper_player_cache_invalidation(load_test_data):
+async def test_sleeper_player_cache_invalidation():
     with respx.mock:
         respx.get(f"{base_url}/players/nfl").mock(
             return_value=httpx.Response(200, json=load_test_data("sleeper_players.json"))

@@ -1,0 +1,7 @@
+{
+    "username": "testuser",
+    "email": "testuser@test.com",
+    "hashed_password": "hashedpassword",
+    "sleeper_user_id": null,
+    "is_active": true
+}
