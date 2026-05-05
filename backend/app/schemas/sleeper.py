@@ -54,3 +54,9 @@ class SleeperPlayer(SleeperBase):
 
 class SleeperLinkAccountRequest(SleeperBase):
     sleeper_username: str
+
+
+class SleeperSyncSummary(SleeperBase):
+    leagues_synced: int
+    teams_synced: int
+    players_synced: int

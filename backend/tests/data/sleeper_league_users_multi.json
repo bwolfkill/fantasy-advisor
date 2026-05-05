@@ -1,0 +1,12 @@
+[
+  {
+    "user_id": "188815879448829952",
+    "display_name": "User A",
+    "metadata": {"team_name": "Team A"}
+  },
+  {
+    "user_id": "other_user_99",
+    "display_name": "User B",
+    "metadata": {"team_name": "Team B"}
+  }
+]

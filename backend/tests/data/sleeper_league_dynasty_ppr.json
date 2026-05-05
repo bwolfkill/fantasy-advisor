@@ -1,0 +1,11 @@
+{
+  "league_id": "test_league_dynasty_ppr",
+  "name": "Test Dynasty PPR",
+  "season": "2024",
+  "status": "in_season",
+  "sport": "nfl",
+  "settings": {"type": 2},
+  "scoring_settings": {"rec": 1.0},
+  "roster_positions": ["QB", "RB", "WR", "TE", "FLEX", "BN"],
+  "total_rosters": 12
+}

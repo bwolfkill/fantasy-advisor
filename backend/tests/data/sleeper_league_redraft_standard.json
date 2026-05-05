@@ -1,0 +1,11 @@
+{
+  "league_id": "test_league_redraft_std",
+  "name": "Test Redraft Standard",
+  "season": "2024",
+  "status": "in_season",
+  "sport": "nfl",
+  "settings": {"type": 0},
+  "scoring_settings": {"rec": 0},
+  "roster_positions": ["QB", "RB", "WR", "TE", "FLEX", "BN"],
+  "total_rosters": 12
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "roster_id": 1,
+    "owner_id": "188815879448829952",
+    "players": ["p1", "p2"],
+    "league_id": "test_league_dynasty_ppr"
+  },
+  {
+    "roster_id": 2,
+    "owner_id": "other_user_99",
+    "players": ["p3"],
+    "league_id": "test_league_dynasty_ppr"
+  }
+]
